@@ -1,0 +1,20 @@
+.container {
+    background-image: url('/assets/ecommerce-admin-watermark-1920x1080.jpg');
+    /* Path from src/assets */
+    background-size: cover;
+    /* Makes the image fill the element */
+    background-repeat: no-repeat;
+    /* Prevent tiling */
+    background-position: center;
+    /* Centers the image */
+    height: 100vh;
+    /* Full viewport height */
+    width: 100%;
+}
+
+.nav-body {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 10px
+}

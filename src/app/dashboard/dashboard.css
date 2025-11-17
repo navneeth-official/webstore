@@ -1,0 +1,83 @@
+.dashboard-container h3 {
+    font-size: 25px;
+    margin-left: 2vw;
+}
+
+.dashboard-container p {
+    font-size: small;
+    color: #878787;
+    margin-left: 2vw;
+}
+
+.stat-cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 3vw;
+}
+
+.card {
+    height: 25vh;
+    width: 17.5vw;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.15),
+        -2px 0 2px rgba(0, 0, 0, 0.15),
+        0 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.recent-cards {
+    margin-top: 4vh;
+    width: 38vw;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.15),
+        -2px 0 2px rgba(0, 0, 0, 0.15),
+        0 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    /* display:flex;
+    flex-direction: column;
+    flex-wrap: nowrap; */
+}
+
+.recent-card {
+    width: 35vw;
+    height: 13vh;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    position: relative;
+}
+
+.recent-card div {
+    margin-top: 5vh;
+}
+
+.recent-card ul {
+    list-style-type: none;
+}
+
+.quick-stats-cards {
+    margin-top: 4vh;
+    width: 38vw;
+    box-shadow: 2px 0 2px rgba(0, 0, 0, 0.15),
+        -2px 0 2px rgba(0, 0, 0, 0.15),
+        0 2px 2px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+.quick-stats-card {
+    width: 35vw;
+    height: 13vh;
+    display: flex;
+    flex-direction:row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    position: relative;
+}
+
+.quick-stats-card ul{
+    list-style-type:none;
+}
+
+.quick-stats-card div{
+    margin-top:3vh;
+}

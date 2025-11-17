@@ -1,0 +1,58 @@
+.card-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 30px;
+    width: 30%;
+    height: 100%;
+    margin-top: 12vh;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    width: 60%;
+    height: 100%;
+    list-style: none;
+    margin-left: -10%;
+    margin-top: 10%;
+    gap: 3vh;
+    margin-left: -5vw;
+    margin-top: 2vh;
+}
+
+.card li {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: 15vw;
+    height: 5vh;
+    background-color: #ffffff;
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    gap: 30px;
+    margin-left: 2vw;
+    cursor: pointer;
+}
+
+.card li p {
+    margin-top: 0.5vh;
+}
+
+.card li svg {
+    margin-left: 1vw;
+    margin-top: 0.5vh;
+}
+
+/* .card li:hover {
+    background-color: #2D3748;
+    color: white;
+    cursor: pointer;
+} */
+
+.card li.selected {
+    background-color: #2D3748;
+    color: white;
+    cursor: pointer;
+}
