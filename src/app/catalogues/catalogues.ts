@@ -3,8 +3,7 @@ import { Apis } from '../services/categories/apis';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { describe } from 'node:test';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 interface catalogue_struct {
   catalogueId: number,
