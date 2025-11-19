@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { Users } from './users';
 
@@ -14,8 +13,7 @@ describe('Users', () => {
       imports: [Users],
       providers: [
         provideHttpClient(),
-        provideHttpClientTesting(),
-        provideAnimations()
+        provideHttpClientTesting()
       ]
     })
       .compileComponents();
