@@ -20,9 +20,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    // Check for the actual structure - container div exists
     expect(compiled.querySelector('.container')).toBeTruthy();
-    // Or check for router-outlet
     expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });
