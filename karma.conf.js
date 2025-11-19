@@ -1,6 +1,7 @@
 module.exports = function (config) {
   config.set({
     customLaunchers: {
+      frameworks: ['jasmine'],
       ChromeHeadlessCI: {
         base: 'ChromeHeadless',
         flags: [
