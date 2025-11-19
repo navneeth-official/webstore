@@ -1,4 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { Catalogues } from './catalogues';
 
@@ -8,9 +11,14 @@ describe('Catalogues', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Catalogues]
+      imports: [Catalogues],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideAnimations()
+      ]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Catalogues);
     component = fixture.componentInstance;
