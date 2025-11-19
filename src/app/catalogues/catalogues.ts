@@ -35,7 +35,7 @@ export class Catalogues {
 
   catalogue!:Observable<catalogue_struct[]>
 
-  constructor(private apis: Apis, private overlay: Overlay, private vcr: ViewContainerRef) {
+  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef) {
     this.catalogue=this.apis.getAllCatalogues()
     this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
    }
