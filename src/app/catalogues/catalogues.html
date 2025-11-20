@@ -93,7 +93,7 @@
                     <!-- <li>MAPPED CATEGORIES</li> -->
                     <li>ACTIONS</li>
                 </ul>
-                @for(card of catalogues1(); track card.catalogueId){
+                @for(card of catalogues; track card.catalogueId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.catalogueId}}</li>
                     <li>{{card.catalogueName}}</li>
@@ -156,8 +156,8 @@
             <input type="text" name="input-description" placeholder="Enter Catalogue Description"
                 formControlName="description">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
-                    (click)="closePopup()">cancel</button>
-                <button type="submit" name="add" (click)="closePopup()">Add Category</button>
+                    (click)="closePopup()">Cancel</button>
+                <button type="submit" name="add" (click)="closePopup()">Add Catalogue</button>
             </div>
         </form>
     </div>
@@ -172,8 +172,8 @@
             <input type="text" name="input-description" placeholder="Enter Catalogue Description"
                 formControlName="description">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
-                    (click)="closePopup1()">cancel</button>
-                <button type="submit" name="add" (click)="closePopup1()">Update Category</button>
+                    (click)="closePopup1()">Cancel</button>
+                <button type="submit" name="add" (click)="closePopup1()">Update Catalogue</button>
             </div>
         </form>
     </div>
@@ -183,8 +183,8 @@
         <form [formGroup]='delete1' (ngSubmit)="deleteCatalogue()">
             <h4>Are you sure you want to delete this item ?</h4>
             <!-- <button (click)="closePopup2()">cancel</button> -->
-            <button type=button (click)="closePopup2();">cancel</button>
-            <button type="submit" (click)="closePopup2()">delete</button>
+            <button type=button (click)="closePopup2();">Cancel</button>
+            <button type="submit" (click)="closePopup2()">Delete</button>
         </form>
     </div>
 </ng-template>

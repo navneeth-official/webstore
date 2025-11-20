@@ -165,7 +165,7 @@
             <p>joiningDate</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
-                    (click)="closePopup()">cancel</button>
+                    (click)="closePopup()">Cancel</button>
                 <button type="submit" name="add" (click)="closePopup()">Add User</button>
             </div>
         </form>
@@ -182,10 +182,10 @@
                 formControlName="email">
             <p>Status</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="status">
-            <p>joiningDate</p>
+            <p>Joining Date</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
-                    (click)="closePopup1()">cancel</button>
+                    (click)="closePopup1()">Cancel</button>
                 <button type="submit" name="add" (click)="closePopup1()">Update User</button>
             </div>
         </form>
@@ -196,8 +196,8 @@
         <form [formGroup]='delete1' (ngSubmit)="deleteUser()">
             <h4>Are you sure you want to delete this user ?</h4>
             <!-- <button (click)="closePopup2()">cancel</button> -->
-            <button type=button (click)="closePopup2();">cancel</button>
-            <button type="submit" (click)="closePopup2()">delete</button>
+            <button type=button (click)="closePopup2();">Cancel</button>
+            <button type="submit" (click)="closePopup2()">Delete</button>
         </form>
     </div>
 </ng-template>

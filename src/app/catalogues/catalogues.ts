@@ -70,14 +70,12 @@ export class Catalogues {
     this.apis.searchCatalogue(this.search_controller()).subscribe((data:any) => {
       console.log(data)
       this.search_catalogues=data
-    })
-    
+    })  
   }
 
   loadCatalogues() {
-
-    this.catalogue=this.apis.getAllCatalogues()
-    this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
+    // this.catalogue=this.apis.getAllCatalogues()
+    // this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
     this.apis.getAllCatalogues().subscribe((data: any) => {
       this.catalogues = [...data]
     })
@@ -88,7 +86,7 @@ export class Catalogues {
     const description = this.create.value.description
     this.apis.createCatalogues(name ?? '', description ?? '').subscribe((data: any) => {
       console.log(data),
-        this.loadCatalogues()
+      this.loadCatalogues()
     })
   }
 
