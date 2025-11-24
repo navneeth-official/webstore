@@ -9,7 +9,7 @@ export const routes: Routes = [
     {path:'', redirectTo:'/dashboard', pathMatch:'full'},
     {path:'dashboard', component:Dashboard},
     {path:'catalogues', component:Catalogues},
-    {path:'categories', component:Categories},
+    {path:'categories/:catalogue', component:Categories},
     {path:'products',component:Products},
     {path:'users',component:Users}
 ];

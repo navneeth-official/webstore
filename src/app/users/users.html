@@ -22,7 +22,7 @@
         <div class="search-container">
             <input type="text" placeholder="search categories" (input)="searchUpdate($event)">
         </div>
-        @if(search_controller()!=''){
+        @if(search_controller()!==''){
         <div class="categories-body">
             <ul class="categories-cards">
                 <ul class="categories-card" style="top:2vh; color:#4A5568">
@@ -97,7 +97,7 @@
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.name}}</li>
                     <li>{{card.email}}</li>
-                    @if(card.status=='ACTIVE'){
+                    @if(card.status==='ACTIVE'){
                         <li><div style="background-color: green; color: white; border-radius: 12px; border: 0px; width:3.5vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">{{card.status}}</div></li>
                     }
                     @else(){
@@ -162,8 +162,8 @@
                 formControlName="email">
             <p>Status</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="status">
-            <p>joiningDate</p>
-            <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
+            <p>JoiningDate</p>
+            <input type="date" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup()">cancel</button>
                 <button type="submit" name="add" (click)="closePopup()">Add User</button>
@@ -182,8 +182,8 @@
                 formControlName="email">
             <p>Status</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="status">
-            <p>joiningDate</p>
-            <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
+            <p>JoiningDate</p>
+            <input type="date" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup1()">cancel</button>
                 <button type="submit" name="add" (click)="closePopup1()">Update User</button>

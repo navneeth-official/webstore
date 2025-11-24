@@ -17,6 +17,7 @@ interface catalogue_struct {
 @Injectable({
   providedIn: 'root',
 })
+
 export class Apis {
   constructor(private http: HttpClient) { }
 

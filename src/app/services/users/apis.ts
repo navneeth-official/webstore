@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
-export class Apis {
+export class Apis4 {
   constructor(private http:HttpClient){}
 
   BASE_URL='http://localhost:8080/api/sellers'

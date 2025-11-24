@@ -1,4 +1,4 @@
-import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
 import { Apis } from '../services/categories/apis';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
@@ -6,6 +6,8 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { describe } from 'node:test';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Tab } from '../services/nav_bar/tab';
 interface catalogue_struct {
   catalogueId: number,
   catalogueName: string,
@@ -20,12 +22,12 @@ interface catalogue_struct {
 
 @Component({
   selector: 'app-catalogues',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,RouterLink],
   templateUrl: './catalogues.html',
   styleUrl: './catalogues.css',
 })
 
-export class Catalogues {
+export class Catalogues implements OnInit {
 
   catalogues!:catalogue_struct[]
   catalogues1!:Signal<catalogue_struct[]>
@@ -35,7 +37,7 @@ export class Catalogues {
 
   catalogue!:Observable<catalogue_struct[]>
 
-  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef) {
+  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef,private Tab:Tab) {
     this.catalogue=this.apis.getAllCatalogues()
     this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
    }
@@ -75,7 +77,6 @@ export class Catalogues {
   }
 
   loadCatalogues() {
-
     this.catalogue=this.apis.getAllCatalogues()
     this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
     this.apis.getAllCatalogues().subscribe((data: any) => {
@@ -204,6 +205,10 @@ export class Catalogues {
       this.overlayRef2?.detach();
       this.overlayRef2 = undefined;
     }, 150); // slight delay to allow moving between button & popup
+  }
+
+  changeTab(tab:string){
+    this.Tab.current_tab.set(tab)
   }
 
 }

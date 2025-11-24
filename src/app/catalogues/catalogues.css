@@ -72,6 +72,8 @@
 }
 .categories-card li{
     position: relative;
+    cursor: pointer;
+    /* padding-top:8px */
     /* width:15vw */
 }
 

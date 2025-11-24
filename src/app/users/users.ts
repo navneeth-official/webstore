@@ -1,9 +1,10 @@
-import { Component, signal, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { describe } from 'node:test';
-import { Apis } from '../services/users/apis';
+import { Apis4 } from '../services/users/apis';
+import { formatDate } from '@angular/common';
 interface catalogue_struct {
     sellerId:number,
     name: string,
@@ -23,13 +24,13 @@ interface catalogue_struct {
   templateUrl: './users.html',
   styleUrl: './users.css',
 })
-export class Users {
+export class Users implements OnInit {
     users!: catalogue_struct[]
 
     search_controller=signal<string>('')
     search_catalogues!:catalogue_struct[]
 
-  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef) { }
+  constructor(private apis:Apis4, private overlay: Overlay, private vcr: ViewContainerRef) { }
 
   create = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -71,6 +72,7 @@ export class Users {
     const status =this.create.value.status
     const joiningDate=this.create.value.joiningDate
     console.log(joiningDate)
+    // const formatedDate= formatDate(joiningDate ?? '','yyyy-mm-dd','en-us')
     this.apis.createUser(name ?? '', email ?? '',status ?? 'ACTIVE',joiningDate ?? '').subscribe((data: any) => {
       console.log(data),
         this.loadUsers()

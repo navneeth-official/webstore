@@ -22,7 +22,7 @@
         <div class="search-container">
             <input type="text" placeholder="search categories" (input)="updateSearch($event)">
         </div>
-        @if(search_controller()!=''){
+        @if(search_controller()!==''){
         <div class="categories-body">
             <ul class="categories-cards">
                 <ul class="categories-card" style="top:2vh; color:#4A5568">
@@ -33,7 +33,7 @@
                     <li>ACTIONS</li>
                 </ul>
                 @for(card of search_catalogues; track card.catalogueId){
-                <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
+                <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;" routerLink="/categories/card.catalogueName">
                     <li>{{card.catalogueId}}</li>
                     <li>{{card.catalogueName}}</li>
                     <li style="color: #64748B;">{{card.catalogueDescription}}</li>
@@ -86,7 +86,7 @@
         @else{
         <div class="categories-body">
             <ul class="categories-cards">
-                <ul class="categories-card" style="top:2vh; color:#4A5568">
+                <ul class="categories-card" style=" top:2vh; color:#4A5568;">
                     <li>ID</li>
                     <li>NAME</li>
                     <li>DESCRIPTION</li>
@@ -96,7 +96,7 @@
                 @for(card of catalogues1(); track card.catalogueId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.catalogueId}}</li>
-                    <li>{{card.catalogueName}}</li>
+                    <li routerLink="/categories/{{card.catalogueName}}" (click)="changeTab('categories')">{{card.catalogueName}}</li>
                     <li style="color: #64748B;">{{card.catalogueDescription}}</li>
                     <!-- <li>{{card.mapped_categories}}</li> -->
                     <li><svg #trigger2
