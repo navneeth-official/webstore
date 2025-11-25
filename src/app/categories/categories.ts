@@ -1,8 +1,6 @@
-import { Component, signal, Signal, TemplateRef, ViewChild, ViewContainerRef, OnInit, Inject, WritableSignal, computed } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Component, signal, Signal, TemplateRef, ViewChild, ViewContainerRef, OnInit, Inject, WritableSignal, computed, OnDestroy } from '@angular/core';
 import { Apis2 } from '../services/categories_1/apis';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TemplatePortal } from '@angular/cdk/portal';
 import { Apis } from '../services/categories/apis'
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Api3 } from '../services/catalogue-categories/api3';
@@ -10,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { CategoriesLogic } from '../services/categories_1/categories-logic';
+import { ModalService } from '../services/shared/modal.service';
 
 interface catalogue_interface {
   catalogueId: number,
@@ -38,7 +37,7 @@ interface category_struct {
   templateUrl: './categories.html',
   styleUrl: './categories.css',
 })
-export class Categories implements OnInit {
+export class Categories implements OnInit, OnDestroy {
   filter_catalogue:WritableSignal<string>=signal('none')
   selectedCatalogue = signal(-1)
   search_controller=computed(() => this.CategoriesLogic.search_controller())
@@ -47,7 +46,7 @@ export class Categories implements OnInit {
   catalogues=computed(() => this.CategoriesLogic.catalogues())
   normalized_catalogues=computed(() => this.CategoriesLogic.normalized_catalogues())
 
-  constructor(private apis: Apis, private overlay: Overlay, private vcr: ViewContainerRef, private apis2: Apis2, private apis3: Api3, private route: ActivatedRoute,private CategoriesLogic:CategoriesLogic) {
+  constructor(private apis: Apis, private vcr: ViewContainerRef, private apis2: Apis2, private apis3: Api3, private route: ActivatedRoute, private CategoriesLogic: CategoriesLogic, private modalService: ModalService) {
   }
 
   create = new FormGroup({
@@ -138,89 +137,47 @@ export class Categories implements OnInit {
     console.log(this.selectedCatalogue())
   }
 
-  private overlayRef?: OverlayRef;
-  private overlayRef1?: OverlayRef;
-  private overlayRef2?: OverlayRef;
-
-  private closeTimeout: any;
-  private closeTimeout1: any;
-  private closeTimeout2: any;
-
   @ViewChild('popup1') popupTemplate!: TemplateRef<any>;
   @ViewChild('popup2') popupBTemplate!: TemplateRef<any>;
   @ViewChild('popup3') popupCTemplate!: TemplateRef<any>;
 
   openOverlay(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout);
-
-    if (!this.overlayRef) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
-      this.overlayRef = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupTemplate, this.vcr);
-      this.overlayRef.attach(portal);
-    }
+    this.modalService.open(this.popupTemplate, this.vcr);
   }
 
   keepOpen() {
-    clearTimeout(this.closeTimeout);
-    this.closePopup1()
-    this.closePopup2()
+    this.modalService.keepOpen();
   }
 
   closePopup() {
-    this.closeTimeout = setTimeout(() => {
-      this.overlayRef?.detach();
-      this.overlayRef = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
   }
 
   openOverlay1(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout1)
-
-    if (!this.overlayRef1) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically()
-
-      this.overlayRef1 = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupBTemplate, this.vcr);
-      this.overlayRef1.attach(portal);
-    }
+    this.modalService.open(this.popupBTemplate, this.vcr);
   }
 
   keepOpen1() {
-    clearTimeout(this.closeTimeout1);
-    this.closePopup()
-    this.closePopup2()
+    this.modalService.keepOpen();
   }
 
   closePopup1() {
-    this.closeTimeout1 = setTimeout(() => {
-      this.overlayRef1?.detach();
-      this.overlayRef1 = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
   }
 
   openOverlay2(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout1)
-
-    if (!this.overlayRef2) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically()
-
-      this.overlayRef2 = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupCTemplate, this.vcr);
-      this.overlayRef2.attach(portal);
-    }
+    this.modalService.open(this.popupCTemplate, this.vcr);
   }
 
   keepOpen2() {
-    clearTimeout(this.closeTimeout2);
-    this.closePopup()
-    this.closePopup1()
+    this.modalService.keepOpen();
   }
 
   closePopup2() {
-    this.closeTimeout2 = setTimeout(() => {
-      this.overlayRef2?.detach();
-      this.overlayRef2 = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
+  }
+
+  ngOnDestroy() {
+    this.modalService.destroy();
   }
 }
