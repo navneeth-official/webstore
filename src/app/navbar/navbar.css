@@ -45,12 +45,6 @@
     margin-top: 0.5vh;
 }
 
-/* .card li:hover {
-    background-color: #2D3748;
-    color: white;
-    cursor: pointer;
-} */
-
 .card li.selected {
     background-color: #2D3748;
     color: white;

@@ -1,21 +1,20 @@
-import { Component, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
+import { Component, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit, computed, Injectable, Signal, WritableSignal } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { describe } from 'node:test';
 import { Apis4 } from '../services/users/apis';
-import { formatDate } from '@angular/common';
+import { UserLogic } from '../services/users/user-logic';
 interface catalogue_struct {
-    sellerId:number,
-    name: string,
-    email:string,
-    status:string,
-    joiningDate:string,
-    createdAt: string,
-    updatedAt: string,
-    createdBy:string,
-    updatedBy:string,
-  // mapped_categories: string[]
+  sellerId: number,
+  name: string,
+  email: string,
+  status: string,
+  joiningDate: string,
+  createdAt: string,
+  updatedAt: string,
+  createdBy: string,
+  updatedBy: string,
 }
 
 @Component({
@@ -25,26 +24,28 @@ interface catalogue_struct {
   styleUrl: './users.css',
 })
 export class Users implements OnInit {
-    users!: catalogue_struct[]
+  users!: catalogue_struct[]
+  users1=computed(() => this.UserLogic.users())
+  search_controller = signal<string>('')
+  search_catalogues!: catalogue_struct[]
+  search_users=computed(() => this.UserLogic.search_users())
 
-    search_controller=signal<string>('')
-    search_catalogues!:catalogue_struct[]
-
-  constructor(private apis:Apis4, private overlay: Overlay, private vcr: ViewContainerRef) { }
+  constructor(private apis: Apis4, private overlay: Overlay, private vcr: ViewContainerRef, private UserLogic: UserLogic) {
+  }
 
   create = new FormGroup({
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
-    status: new FormControl('',Validators.required),
-    joiningDate: new FormControl('',Validators.required)
+    status: new FormControl('', Validators.required),
+    joiningDate: new FormControl('', Validators.required)
   })
 
   edit = new FormGroup({
     id: new FormControl(0),
     name: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
-    status: new FormControl('',Validators.required),
-    joiningDate: new FormControl('',Validators.required)
+    status: new FormControl('', Validators.required),
+    joiningDate: new FormControl('', Validators.required)
   })
 
   delete1 = new FormGroup({
@@ -52,35 +53,21 @@ export class Users implements OnInit {
   })
 
   ngOnInit() {
-    this.apis.getAllUsers().subscribe((data: any) => {
-      console.log(data)
-      // this.catalogues.update(value => [...data])
-      this.users = [...data]
-    })
-  }
-
-  loadUsers() {
-    this.apis.getAllUsers().subscribe((data: any) => {
-      // this.catalogues.update(value => [...data])
-      this.users = [...data]
-    })
+    this.UserLogic.loadUsers()
   }
 
   createUser() {
     const name = this.create.value.name
     const email = this.create.value.email
-    const status =this.create.value.status
-    const joiningDate=this.create.value.joiningDate
-    console.log(joiningDate)
-    // const formatedDate= formatDate(joiningDate ?? '','yyyy-mm-dd','en-us')
-    this.apis.createUser(name ?? '', email ?? '',status ?? 'ACTIVE',joiningDate ?? '').subscribe((data: any) => {
-      console.log(data),
-        this.loadUsers()
-    })
+    const status = this.create.value.status
+    const joiningDate = this.create.value.joiningDate
+    if (name != null && email != null && status != null && joiningDate != null) {
+    this.UserLogic.createUser(name,email,status,joiningDate)
+    }
   }
 
-  patchValues(id: number, name: string, email:string,status:string,joiningDate:string) {
-    this.edit.patchValue({ id: id, name: name, email:email, status:status , joiningDate:joiningDate})
+  patchValues(id: number, name: string, email: string, status: string, joiningDate: string) {
+    this.edit.patchValue({ id: id, name: name, email: email, status: status, joiningDate: joiningDate })
     console.log(this.edit)
   }
 
@@ -89,34 +76,28 @@ export class Users implements OnInit {
     const name = this.edit.value.name
     const email = this.edit.value.email
     const status = this.edit.value.status
-    const joiningDate=this.edit.value.joiningDate
-    console.log('user_body'+joiningDate)
-    this.apis.updateUser(id ?? 0, name ?? '', email ?? '',status ?? 'ACTIVE',joiningDate ?? '').subscribe((data: any) => [
-      console.log(data),
-      this.loadUsers()
-    ])
+    const joiningDate = this.edit.value.joiningDate
+    if (id!=null && name != null && email != null && status != null && joiningDate != null) {
+      this.UserLogic.updateUser(id,name,email,status,joiningDate)
+    }
   }
 
   patchValue(id: number) {
-    this.delete1.patchValue({id:id})
+    this.delete1.patchValue({ id: id })
   }
 
   deleteUser() {
     const id = this.delete1.value.id
     console.log(id, this.delete1.value.id)
-    this.apis.deleteUser(id ?? 0).subscribe((data: any) => {
-      console.log(data)
-      this.loadUsers()
-    })
+    if (id != null) {
+      this.UserLogic.deleteUser(id)
+    }
   }
 
-  searchUpdate(event:any){
-    const text=(event.target as HTMLInputElement).value
+  searchUpdate(event: any) {
+    const text = (event.target as HTMLInputElement).value
     this.search_controller.set(text)
-    this.apis.searchUsers(this.search_controller()).subscribe((data:any) => {
-      console.log(data)
-      this.search_catalogues=data
-    })
+    this.UserLogic.searchUpdate(text)
   }
 
   private overlayRef?: OverlayRef;

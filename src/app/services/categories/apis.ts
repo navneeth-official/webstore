@@ -11,7 +11,6 @@ interface catalogue_struct {
   updatedAt: string,
   updatedBy: string,
   categories: any
-  // mapped_categories: string[]
 }
 
 @Injectable({

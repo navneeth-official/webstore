@@ -1,13 +1,15 @@
-import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit } from '@angular/core';
+import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit, WritableSignal, computed } from '@angular/core';
 import { Apis } from '../services/categories/apis';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { describe } from 'node:test';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Tab } from '../services/nav_bar/tab';
+import { Apis2 } from '../services/categories_1/apis';
+import { Api3 } from '../services/catalogue-categories/api3';
+import { CatalogueLogic } from '../services/categories/catalogue-logic';
+
 interface catalogue_struct {
   catalogueId: number,
   catalogueName: string,
@@ -16,31 +18,33 @@ interface catalogue_struct {
   createdBy: string,
   updatedAt: string,
   updatedBy: string,
-  categories: any
-  // mapped_categories: string[]
+  categories: any,
+  open: WritableSignal<boolean>
+}
+
+interface catalogue_category {
+  catalogueId: number,
+  categoryIds: string[]
 }
 
 @Component({
   selector: 'app-catalogues',
-  imports: [ReactiveFormsModule,RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './catalogues.html',
   styleUrl: './catalogues.css',
 })
 
 export class Catalogues implements OnInit {
 
-  catalogues!:catalogue_struct[]
-  catalogues1!:Signal<catalogue_struct[]>
+  catalogues!: catalogue_struct[]
+  catalogues1 = computed(() => this.CatalogueLogic.catalogues())
 
-  search_controller=signal<string>('')
+  search_controller = signal<string>('')
   search_catalogues!: catalogue_struct[]
+  catalogue_category=computed(() => this.CatalogueLogic.catalogue_category() )
 
-  catalogue!:Observable<catalogue_struct[]>
-
-  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef,private Tab:Tab) {
-    this.catalogue=this.apis.getAllCatalogues()
-    this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
-   }
+  constructor(private apis: Apis, private overlay: Overlay, private vcr: ViewContainerRef, private Tab: Tab, private apis3: Api3, private CatalogueLogic: CatalogueLogic) {
+  }
 
   create = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -58,39 +62,26 @@ export class Catalogues implements OnInit {
   })
 
   ngOnInit() {
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      console.log(data)
-      // this.catalogues.update(value => [...data])
-      this.catalogues = [...data]
-    })
+    this.CatalogueLogic.loadCatalogues()
+    console.log(this.catalogue_category())
   }
 
-  updateSearch(event:any){
-    const text=(event.target as HTMLInputElement).value
+  updateSearch(event: any) {
+    const text = (event.target as HTMLInputElement).value
     console.log(text)
     this.search_controller.set(text)
-    this.apis.searchCatalogue(this.search_controller()).subscribe((data:any) => {
+    this.apis.searchCatalogue(this.search_controller()).subscribe((data: any) => {
       console.log(data)
-      this.search_catalogues=data
-    })
-    
-  }
-
-  loadCatalogues() {
-    this.catalogue=this.apis.getAllCatalogues()
-    this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      this.catalogues = [...data]
+      this.search_catalogues = data
     })
   }
 
   createCatalogue() {
     const name = this.create.value.name
     const description = this.create.value.description
-    this.apis.createCatalogues(name ?? '', description ?? '').subscribe((data: any) => {
-      console.log(data),
-        this.loadCatalogues()
-    })
+    if (name != null && description != null) {
+      this.CatalogueLogic.createCatalogue(name, description)
+    }
   }
 
   patchValues(id: number, name: string, desrciption: string) {
@@ -102,23 +93,21 @@ export class Catalogues implements OnInit {
     const id = this.edit.value.id
     const name = this.edit.value.name
     const description = this.edit.value.description
-    this.apis.updateCatalogues(id ?? 0, name ?? '', description ?? '').subscribe((data: any) => [
-      console.log(data),
-      this.loadCatalogues()
-    ])
+    if (id != null && name != null && description != null) {
+      this.CatalogueLogic.updateCatalogue(id, name, description)
+    }
   }
 
   patchValue(id: number) {
-    this.delete1.patchValue({id:id})
+    this.delete1.patchValue({ id: id })
   }
 
   deleteCatalogue() {
     const id = this.delete1.value.id
     console.log(id, this.delete1.value.id)
-    this.apis.deleteCatalogue(id ?? 0).subscribe((data: any) => {
-      console.log(data)
-      this.loadCatalogues()
-    })
+    if (id != null) {
+      this.CatalogueLogic.deleteCatalogue(id)
+    }
   }
 
   private overlayRef?: OverlayRef;
@@ -207,7 +196,7 @@ export class Catalogues implements OnInit {
     }, 150); // slight delay to allow moving between button & popup
   }
 
-  changeTab(tab:string){
+  changeTab(tab: string) {
     this.Tab.current_tab.set(tab)
   }
 

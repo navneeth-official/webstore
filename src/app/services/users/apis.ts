@@ -17,42 +17,12 @@ export class Apis4 {
     return this.http.get(this.BASE_URL+'/'+id)
   }
 
-  // createUser(name:string,email:string,role:string,joindate:string){
-  //   const body={
-  //     username:name,
-  //     email:email,
-  //     fullName:name,
-  //     role:role,
-  //     createdAt:new Date(),
-  //     updatedAt:new Date(),
-  //   }
-  //   console.log(body)
-  //   return this.http.post(this.BASE_URL,body)
-  // }
-
-  // updateUser(id:number,name:string,email:string,role:string,joindate:string){
-  //   const body={
-  //     username:name,
-  //     email:email,
-  //     fullName:name,
-  //     role:role,
-  //     createdAt:new Date(),
-  //     updatedAt:new Date(),
-  //   }
-  //   return this.http.put(this.BASE_URL+'/'+id,body)
-  // }
-
-  
   createUser(name:string,email:string,status:string,joiningdate:string){
     const body={
       name:name,
       email:email,
       status:status,
       joiningDate:joiningdate,
-      // createdAt:new Date(),
-      // updatedAt:new Date(),
-      // createdBy:new Date(),
-      // updatedBy:new Date(),
     }
     return this.http.post(this.BASE_URL,body)
   }
@@ -63,10 +33,6 @@ export class Apis4 {
       email:email,
       status:status,
       joiningDate:joiningdate,
-      // createdAt:new Date(),
-      // updatedAt:new Date(),
-      // createdBy:new Date(),
-      // updatedBy:new Date(),
     }
     console.log(body)
     return this.http.put(this.BASE_URL+'/'+id,body)
