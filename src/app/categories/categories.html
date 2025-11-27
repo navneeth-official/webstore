@@ -173,7 +173,7 @@
                 @if(filter_catalogue()=='none'){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.categoryId}}</li>
-                    <li>{{card.categoryName}}</li>
+                    <li routerLink="/products/{{card.categoryName}}">{{card.categoryName}}</li>
                     <li style="color: #64748B;">{{card.categoryDescription}}</li>
                     <li>{{card.productCount}}</li>
                     <li (mouseenter)="card.open.set(true)" (mouseleave)="card.open.set(false)"
