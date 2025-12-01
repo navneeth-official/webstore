@@ -256,11 +256,10 @@ svg {
     border: 0.052vw solid #d1d1d1;
     border-radius: 0.42vw;
     overflow: hidden;
-    /* makes them appear as one control */
     background: #fff;
 }
 
-/* LEFT: Currency dropdown EXACTLY like country code selector */
+
 .price-container select {
     width: 4.69vw;
     padding: 0.93vh 0.625vw;
@@ -269,35 +268,31 @@ svg {
     border-right: 0.052vw solid #d1d1d1;
     font-size: 0.73vw;
     height: 4.07vh;
-    /* MATCH phone input height */
     cursor: pointer;
     outline: none;
-
-    /* Dropdown arrow styling */
     appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='14' width='14' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='0,0 20,0 10,10'/></svg>");
     background-repeat: no-repeat;
     background-position: right 0.52vw center;
 }
 
-/* RIGHT: Amount input */
+
 .price-container input[type="number"] {
     flex: 1;
     border: none;
     padding: 0.93vh 0.625vw;
     font-size: 0.78vw;
     height: 4.07vh;
-    /* MATCHES select height */
     outline: none;
 }
 
-/* Focus ON ANY CHILD = highlight FULL BOX */
+
 .price-container:focus-within {
     border-color: #6c63ff;
     box-shadow: 0 0 0 0.1vw rgba(108, 99, 255, 0.25);
 }
 
-/* Mobile responsiveness */
+
 @media (max-width: 25vw) {
     .price-container {
         max-width: 100%;
