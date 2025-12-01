@@ -3,11 +3,11 @@
     /* Path from src/assets */
     background-size: cover;
     /* Makes the image fill the element */
-    background-repeat: no-repeat;
+    background-repeat: repeat-y;
     /* Prevent tiling */
     background-position: center;
     /* Centers the image */
-    height: 100vh;
+    height: 100%;
     /* Full viewport height */
     width: 100%;
 }
@@ -16,5 +16,5 @@
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    gap: 10px
+    gap: 0.52vw
 }

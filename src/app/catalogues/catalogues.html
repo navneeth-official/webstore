@@ -22,22 +22,21 @@
         <div class="search-container">
             <input type="text" placeholder="search categories" (input)="updateSearch($event)">
         </div>
-        @if(search_controller()!=''){
+        @if(search_controller()!==''){
         <div class="categories-body">
             <ul class="categories-cards">
                 <ul class="categories-card" style="top:2vh; color:#4A5568">
                     <li>ID</li>
                     <li>NAME</li>
                     <li>DESCRIPTION</li>
-                    <!-- <li>MAPPED CATEGORIES</li> -->
                     <li>ACTIONS</li>
                 </ul>
                 @for(card of search_catalogues; track card.catalogueId){
-                <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
+                <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;"
+                    routerLink="/categories/card.catalogueName">
                     <li>{{card.catalogueId}}</li>
                     <li>{{card.catalogueName}}</li>
                     <li style="color: #64748B;">{{card.catalogueDescription}}</li>
-                    <!-- <li>{{card.mapped_categories}}</li> -->
                     <li><svg #trigger2
                             (click)="openOverlay1(trigger2);keepOpen1();patchValues(card.catalogueId,card.catalogueName,card.catalogueDescription)"
                             width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -86,19 +85,42 @@
         @else{
         <div class="categories-body">
             <ul class="categories-cards">
-                <ul class="categories-card" style="top:2vh; color:#4A5568">
+                <ul class="categories-card" style=" top:2vh; color:#4A5568;">
                     <li>ID</li>
                     <li>NAME</li>
                     <li>DESCRIPTION</li>
-                    <!-- <li>MAPPED CATEGORIES</li> -->
+                    <li>CATALOGUE_CATEGORY</li>
                     <li>ACTIONS</li>
                 </ul>
                 @for(card of catalogues; track card.catalogueId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.catalogueId}}</li>
-                    <li>{{card.catalogueName}}</li>
+                    <li routerLink="/categories/{{card.catalogueName}}" (click)="changeTab('categories')">
+                        {{card.catalogueName}}</li>
                     <li style="color: #64748B;">{{card.catalogueDescription}}</li>
-                    <!-- <li>{{card.mapped_categories}}</li> -->
+                    <li (mouseenter)="card.open.set(true)" (mouseleave)="card.open.set(false)"
+                        style="transition: all 0.3 ease; transition-duration: 8000ms; position: relative; border-radius: 8px; background-color: #87878787; top:-10px; width:max-content; padding-top:8px; padding-left:8px; padding-bottom:0px; position: relative; padding:8px">
+                        @for(cc of catalogue_category();track cc.catalogueId){
+                        @if(cc.catalogueId==card.catalogueId){
+                        @if(card.open()==true){
+                        <div
+                            style="background-color: white; margin-top:-10px; margin-left:-30px; transition:ease-in; transition-duration: 8000ms;  z-index: 9999; position:absolute; width:150px; overflow-x:scroll; scrollbar-width: none; scroll-behavior: smooth;">
+                            <ul style="display:flex; flex-direction:row; flex-wrap:nowrap; gap:20px; list-style-type: none; width:max-content"
+                                (mouseenter)="card.open.set(true)" (mouseleave)="card.open.set(false)">
+                                @for(category of cc.categoryIds;track $index){
+                                <li
+                                    style=" height:15px; width:120px; padding-top: 10px; background-color: #87878787; border-radius: 8px; padding-left:8px;">
+                                    {{category}}</li>
+                                }
+                            </ul>
+                        </div>
+                        }
+                        @else{
+                        {{cc.categoryIds[0]}}
+                        }
+                        }
+                        }
+                    </li>
                     <li><svg #trigger2
                             (click)="openOverlay1(trigger2);keepOpen1();patchValues(card.catalogueId,card.catalogueName,card.catalogueDescription)"
                             width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"
@@ -157,7 +179,7 @@
                 formControlName="description">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup()">Cancel</button>
-                <button type="submit" name="add" (click)="closePopup()">Add Catalogue</button>
+                <button type="submit" name="add" (click)="closePopup()">Add Category</button>
             </div>
         </form>
     </div>
@@ -173,7 +195,7 @@
                 formControlName="description">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup1()">Cancel</button>
-                <button type="submit" name="add" (click)="closePopup1()">Update Catalogue</button>
+                <button type="submit" name="add" (click)="closePopup1()">Update Category</button>
             </div>
         </form>
     </div>
@@ -182,7 +204,6 @@
     <div class="popup-box" (mouseenter)="keepOpen2()">
         <form [formGroup]='delete1' (ngSubmit)="deleteCatalogue()">
             <h4>Are you sure you want to delete this item ?</h4>
-            <!-- <button (click)="closePopup2()">cancel</button> -->
             <button type=button (click)="closePopup2();">Cancel</button>
             <button type="submit" (click)="closePopup2()">Delete</button>
         </form>

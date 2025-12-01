@@ -22,21 +22,19 @@
         <div class="search-container">
             <input type="text" placeholder="search categories" (input)="searchUpdate($event)">
         </div>
-        @if(search_controller()!=''){
+        @if(search_controller()!==''){
         <div class="categories-body">
             <ul class="categories-cards">
                 <ul class="categories-card" style="top:2vh; color:#4A5568">
                     <li>USER NAME</li>
                     <li>EMAIL</li>
                     <li>JOIN DATE</li>
-                    <!-- <li>MAPPED CATEGORIES</li> -->
                     <li>ACTIONS</li>
                 </ul>
-                @for(card of search_catalogues; track card.sellerId){
+                @for(card of search_users(); track card.sellerId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.name}}</li>
                     <li>{{card.email}}</li>
-                    <!-- <li style="color: #64748B;">{{card.role}}</li> -->
                     <li>{{card.joiningDate}}</li>
                     <li><svg #trigger2
                             (click)="openOverlay1(trigger2);keepOpen1();patchValues(card.sellerId,card.name,card.email,card.status,card.joiningDate)"
@@ -93,15 +91,23 @@
                     <li>JOIN DATE</li>
                     <li>ACTIONS</li>
                 </ul>
-                @for(card of users; track card.sellerId){
+                @for(card of users1(); track card.sellerId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.name}}</li>
                     <li>{{card.email}}</li>
-                    @if(card.status=='ACTIVE'){
-                        <li><div style="background-color: green; color: white; border-radius: 12px; border: 0px; width:3.5vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">{{card.status}}</div></li>
+                    @if(card.status==='ACTIVE'){
+                    <li>
+                        <div
+                            style="background-color: green; color: white; border-radius: 12px; border: 0px; width:3.5vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">
+                            {{card.status}}</div>
+                    </li>
                     }
                     @else(){
-                        <li><div style="background-color: rgb(179, 0, 0); color: white; border-radius: 12px; border: 0px; width:4.2vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">{{card.status}}</div></li>
+                    <li>
+                        <div
+                            style="background-color: rgb(179, 0, 0); color: white; border-radius: 12px; border: 0px; width:4.2vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">
+                            {{card.status}}</div>
+                    </li>
                     }
                     <li>{{card.joiningDate}}</li>
                     <li><svg #trigger2
@@ -162,8 +168,8 @@
                 formControlName="email">
             <p>Status</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="status">
-            <p>joiningDate</p>
-            <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
+            <p>JoiningDate</p>
+            <input type="date" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup()">Cancel</button>
                 <button type="submit" name="add" (click)="closePopup()">Add User</button>
@@ -182,8 +188,8 @@
                 formControlName="email">
             <p>Status</p>
             <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="status">
-            <p>Joining Date</p>
-            <input type="text" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
+            <p>JoiningDate</p>
+            <input type="date" name="input-name" placeholder="Enter Catalogue Name" formControlName="joiningDate">
             <div style="display:flex; flex-direction:row; flex-wrap:nowrap;"> <button type="button"
                     (click)="closePopup1()">Cancel</button>
                 <button type="submit" name="add" (click)="closePopup1()">Update User</button>
@@ -195,7 +201,6 @@
     <div class="popup-box" (mouseenter)="keepOpen2()">
         <form [formGroup]='delete1' (ngSubmit)="deleteUser()">
             <h4>Are you sure you want to delete this user ?</h4>
-            <!-- <button (click)="closePopup2()">cancel</button> -->
             <button type=button (click)="closePopup2();">Cancel</button>
             <button type="submit" (click)="closePopup2()">Delete</button>
         </form>
