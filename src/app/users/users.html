@@ -29,14 +29,12 @@
                     <li>USER NAME</li>
                     <li>EMAIL</li>
                     <li>JOIN DATE</li>
-                    <!-- <li>MAPPED CATEGORIES</li> -->
                     <li>ACTIONS</li>
                 </ul>
                 @for(card of search_catalogues; track card.sellerId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li>{{card.name}}</li>
                     <li>{{card.email}}</li>
-                    <!-- <li style="color: #64748B;">{{card.role}}</li> -->
                     <li>{{card.joiningDate}}</li>
                     <li><svg #trigger2
                             (click)="openOverlay1(trigger2);keepOpen1();patchValues(card.sellerId,card.name,card.email,card.status,card.joiningDate)"
