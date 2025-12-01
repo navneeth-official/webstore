@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    gap: 30px;
+    gap: 1.56vw;
     width: 30%;
     height: 100%;
     margin-top: 12vh;
@@ -30,8 +30,8 @@
     height: 5vh;
     background-color: #ffffff;
     color: rgb(0, 0, 0);
-    border-radius: 5px;
-    gap: 30px;
+    border-radius: 0.26vw;
+    gap: 1.56vw;
     margin-left: 2vw;
     cursor: pointer;
 }
@@ -44,12 +44,6 @@
     margin-left: 1vw;
     margin-top: 0.5vh;
 }
-
-/* .card li:hover {
-    background-color: #2D3748;
-    color: white;
-    cursor: pointer;
-} */
 
 .card li.selected {
     background-color: #2D3748;

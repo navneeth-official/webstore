@@ -1,11 +1,13 @@
-import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, Signal, signal, TemplateRef, ViewChild, ViewContainerRef, OnInit, WritableSignal, computed, OnDestroy } from '@angular/core';
 import { Apis } from '../services/categories/apis';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { describe } from 'node:test';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Tab } from '../services/nav_bar/tab';
+import { Apis2 } from '../services/categories_1/apis';
+import { Api3 } from '../services/catalogue-categories/api3';
+import { CatalogueLogic } from '../services/categories/catalogue-logic';
+import { ModalService } from '../services/shared/modal.service';
+
 interface catalogue_struct {
   catalogueId: number,
   catalogueName: string,
@@ -14,31 +16,28 @@ interface catalogue_struct {
   createdBy: string,
   updatedAt: string,
   updatedBy: string,
-  categories: any
-  // mapped_categories: string[]
+  categories: any,
+  open: WritableSignal<boolean>
 }
 
 @Component({
   selector: 'app-catalogues',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './catalogues.html',
   styleUrl: './catalogues.css',
 })
 
-export class Catalogues {
+export class Catalogues implements OnInit, OnDestroy {
 
-  catalogues!:catalogue_struct[]
-  catalogues1!:Signal<catalogue_struct[]>
+  catalogues!: catalogue_struct[]
+  catalogues1 = computed(() => this.CatalogueLogic.catalogues())
 
-  search_controller=signal<string>('')
+  search_controller = signal<string>('')
   search_catalogues!: catalogue_struct[]
+  catalogue_category = computed(() => this.CatalogueLogic.catalogue_category())
 
-  catalogue!:Observable<catalogue_struct[]>
-
-  constructor(private apis:Apis, private overlay: Overlay, private vcr: ViewContainerRef) {
-    this.catalogue=this.apis.getAllCatalogues()
-    this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
-   }
+  constructor(private apis: Apis, private vcr: ViewContainerRef, private Tab: Tab, private apis3: Api3, private CatalogueLogic: CatalogueLogic, private modalService: ModalService) {
+  }
 
   create = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -56,40 +55,26 @@ export class Catalogues {
   })
 
   ngOnInit() {
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      console.log(data)
-      // this.catalogues.update(value => [...data])
-      this.catalogues = [...data]
-    })
+    this.CatalogueLogic.loadCatalogues()
+    console.log(this.catalogue_category())
   }
 
-  updateSearch(event:any){
-    const text=(event.target as HTMLInputElement).value
+  updateSearch(event: any) {
+    const text = (event.target as HTMLInputElement).value
     console.log(text)
     this.search_controller.set(text)
-    this.apis.searchCatalogue(this.search_controller()).subscribe((data:any) => {
+    this.apis.searchCatalogue(this.search_controller()).subscribe((data: any) => {
       console.log(data)
-      this.search_catalogues=data
-    })
-    
-  }
-
-  loadCatalogues() {
-
-    this.catalogue=this.apis.getAllCatalogues()
-    this.catalogues1=toSignal(this.catalogue,{initialValue:[]})
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      this.catalogues = [...data]
+      this.search_catalogues = data
     })
   }
 
   createCatalogue() {
     const name = this.create.value.name
     const description = this.create.value.description
-    this.apis.createCatalogues(name ?? '', description ?? '').subscribe((data: any) => {
-      console.log(data),
-        this.loadCatalogues()
-    })
+    if (name != null && description != null) {
+      this.CatalogueLogic.createCatalogue(name, description)
+    }
   }
 
   patchValues(id: number, name: string, desrciption: string) {
@@ -101,109 +86,69 @@ export class Catalogues {
     const id = this.edit.value.id
     const name = this.edit.value.name
     const description = this.edit.value.description
-    this.apis.updateCatalogues(id ?? 0, name ?? '', description ?? '').subscribe((data: any) => [
-      console.log(data),
-      this.loadCatalogues()
-    ])
+    if (id != null && name != null && description != null) {
+      this.CatalogueLogic.updateCatalogue(id, name, description)
+    }
   }
 
   patchValue(id: number) {
-    this.delete1.patchValue({id:id})
+    this.delete1.patchValue({ id: id })
   }
 
   deleteCatalogue() {
     const id = this.delete1.value.id
     console.log(id, this.delete1.value.id)
-    this.apis.deleteCatalogue(id ?? 0).subscribe((data: any) => {
-      console.log(data)
-      this.loadCatalogues()
-    })
+    if (id != null) {
+      this.CatalogueLogic.deleteCatalogue(id)
+    }
   }
-
-  private overlayRef?: OverlayRef;
-  private overlayRef1?: OverlayRef;
-  private overlayRef2?: OverlayRef;
-
-  private closeTimeout: any;
-  private closeTimeout1: any;
-  private closeTimeout2: any;
 
   @ViewChild('popup1') popupTemplate!: TemplateRef<any>;
   @ViewChild('popup2') popupBTemplate!: TemplateRef<any>;
   @ViewChild('popup3') popupCTemplate!: TemplateRef<any>;
 
   openOverlay(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout);
-
-    if (!this.overlayRef) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically();
-      this.overlayRef = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupTemplate, this.vcr);
-      this.overlayRef.attach(portal);
-    }
+    this.modalService.open(this.popupTemplate, this.vcr);
   }
 
   keepOpen() {
-    clearTimeout(this.closeTimeout);
-    this.closePopup1()
-    this.closePopup2()
+    this.modalService.keepOpen();
   }
 
   closePopup() {
-    this.closeTimeout = setTimeout(() => {
-      this.overlayRef?.detach();
-      this.overlayRef = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
   }
 
   openOverlay1(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout1)
-
-    if (!this.overlayRef1) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically()
-
-      this.overlayRef1 = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupBTemplate, this.vcr);
-      this.overlayRef1.attach(portal);
-    }
+    this.modalService.open(this.popupBTemplate, this.vcr);
   }
 
   keepOpen1() {
-    clearTimeout(this.closeTimeout1);
-    this.closePopup()
-    this.closePopup2()
+    this.modalService.keepOpen();
   }
 
   closePopup1() {
-    this.closeTimeout1 = setTimeout(() => {
-      this.overlayRef1?.detach();
-      this.overlayRef1 = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
   }
 
   openOverlay2(trigger: HTMLElement) {
-    clearTimeout(this.closeTimeout1)
-
-    if (!this.overlayRef2) {
-      const positionStrategy = this.overlay.position().global().centerHorizontally().centerVertically()
-
-      this.overlayRef2 = this.overlay.create({ positionStrategy });
-      const portal = new TemplatePortal(this.popupCTemplate, this.vcr);
-      this.overlayRef2.attach(portal);
-    }
+    this.modalService.open(this.popupCTemplate, this.vcr);
   }
 
   keepOpen2() {
-    clearTimeout(this.closeTimeout2);
-    this.closePopup()
-    this.closePopup1()
+    this.modalService.keepOpen();
   }
 
   closePopup2() {
-    this.closeTimeout2 = setTimeout(() => {
-      this.overlayRef2?.detach();
-      this.overlayRef2 = undefined;
-    }, 150); // slight delay to allow moving between button & popup
+    this.modalService.close();
+  }
+
+  ngOnDestroy() {
+    this.modalService.destroy();
+  }
+
+  changeTab(tab: string) {
+    this.Tab.current_tab.set(tab)
   }
 
 }

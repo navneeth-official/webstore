@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { Apis } from './apis';
+import { Apis4 } from './apis';
 
 describe('Apis', () => {
-  let service: Apis;
+  let service: Apis4;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,7 +14,7 @@ describe('Apis', () => {
         provideHttpClientTesting()
       ]
     });
-    service = TestBed.inject(Apis);
+    service = TestBed.inject(Apis4);
   });
 
   it('should be created', () => {
