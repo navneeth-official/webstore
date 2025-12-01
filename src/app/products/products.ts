@@ -79,7 +79,6 @@ interface price_struct {
 })
 export class Products {
 
-  // filter_catalogue: WritableSignal<string> = signal('none')
   selectedCatagory:WritableSignal<string>= signal('')
   search_controller = computed(() => this.productsLogic.search_controller())
   search_products = computed(() => this.productsLogic.search_products())
@@ -137,7 +136,6 @@ export class Products {
   })
 
   ngOnInit() {
-    // this.CategoriesLogic.OnInit()
     this.productsLogic.OnInit()
 
     this.route.params.subscribe((param:any) => {
@@ -182,7 +180,7 @@ export class Products {
 
   updateCatalogue() {
     const id = this.edit.value.id
-    const thumbnail = this.create.value.thumbnail
+    const thumbnail = this.edit.value.thumbnail
     const name = this.edit.value.name
     const catalogueCategory = this.edit.value.catalogueCategory
     const stock = this.edit.value.stock
@@ -208,17 +206,22 @@ export class Products {
     }
   }
 
-  // onCatalogueChange(value: any) {
-  //   const selected = this.create.value.catalogue ?? []
-  //   this.selectedCatalogue.set(selected[0].catalogueId)
-  //   console.log(this.selectedCatalogue())
-  // }
+  imageUrl:WritableSignal<string>=signal('')
+
+  setImage(url:string){
+    this.imageUrl.set(url)
+  }
+
+  hideImage(event:Event){
+    (event.target as HTMLImageElement).style.display='none'
+  }
 
   @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
 
   openFilePicker() {
     this.fileInput.nativeElement.click();
   }
+
  selectedFile:WritableSignal<File|null>=signal(null)
   onFileSelected(event: Event) {
     const file=(event.target as HTMLInputElement).files?.[0];

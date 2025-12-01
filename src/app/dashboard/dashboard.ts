@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { Apis } from '../services/categories/apis';
 import { Apis2 } from '../services/categories_1/apis';
 import { Apis4 } from '../services/users/apis';
+import { Apis5 } from '../services/product/apis5';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,10 +11,11 @@ import { Apis4 } from '../services/users/apis';
   styleUrl: './dashboard.css',
 })
 export class Dashboard {
-  constructor(private apis: Apis, private apis2: Apis2, private apis4: Apis4) { }
+  constructor(private apis: Apis, private apis2: Apis2, private apis4: Apis4,private apis5:Apis5) { }
   noOfCatalogues = signal(0)
   noOfCategories = signal(0)
   noOfUsers = signal(0)
+  noOfProducts=signal(0)
   ngOnInit() {
     this.apis.getAllCatalogues().subscribe((data: any) => {
       console.log(data)
@@ -43,6 +45,16 @@ export class Dashboard {
       }
       this.noOfUsers.set(count)
   })
+
+  this.apis5.getAllProducts().subscribe((data:any) => {
+    console.log(data)
+    let count=0
+    for(let product of data){
+      count=count+1
+    }
+    this.noOfProducts.set(count)
+  })
+
   }
 
 

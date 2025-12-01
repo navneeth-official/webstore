@@ -133,7 +133,7 @@
                 @if(selectedCatagory()==card.catalogueCategory.categoryName){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
                     <li style="margin-top:-12px"><img src={{card.imageUrl}} alt=alt-img
-                            style="height:30px; width:30px; border-radius:7px;">
+                            style="height:30px; width:30px; border-radius:7px;" >
                     </li>
                     <li>{{card.productName}}</li>
                     <li style="color: #64748B;">{{card.catalogueCategory.categoryName}}</li>
@@ -144,7 +144,6 @@
                     }
                     }
                     <li>{{card.prices[0]?.currencySymbol}}{{card.prices[0]?.priceAmount}}</li>
-                    <!-- <li>IN STOCK</li> -->
                     @if(card.stock>0){
                     <li style="font-size:11px">
                         <div
@@ -206,8 +205,8 @@
                 @else {
                 @for(card of products1(); track card.productId){
                 <ul class="categories-card" style="position: relative; margin-top:5vh; color:#1E293B;">
-                    <li style="margin-top:-12px"><img src={{card.imageUrl}} alt=alt-img
-                            style="height:30px; width:30px; border-radius:7px;">
+                    <li style="margin-top:-12px"><img src={{card.imageUrl}} alt='alt-img'
+                            style="height:30px; width:30px; border-radius:7px;" (error)="hideImage($event)" >
                     </li>
                     <li>{{card.productName}}</li>
                     <li style="color: #64748B;">{{card.catalogueCategory.categoryName}}</li>
@@ -218,7 +217,6 @@
                     }
                     }
                     <li>{{card.prices[0]?.currencySymbol}}{{card.prices[0]?.priceAmount}}</li>
-                    <!-- <li>IN STOCK</li> -->
                     @if(card.stock>0){
                     <li style="font-size:11px">
                         <div
@@ -291,10 +289,8 @@
             @if(selectedFile!=null){
             <p>{{selectedFile()?.name}}</p>
             }
-            @else{
-            <p>No File Selected</p>
-            }
-            <input type="text" name="input-name" placeholder="Enter Image URL" formControlName="thumbnail">
+            <input #url type="text" name="input-name" placeholder="Enter Image URL" formControlName="thumbnail" (input)="setImage(url.value)">
+            <p><img src={{imageUrl()}} alt="" style=" width:8vw; height:8vw; border-radius: 5px;"></p>
             <p>Product Name</p>
             <input type="text" name="input-name" placeholder="Enter Product Name" formControlName="name">
             <p>Select Category</p>
@@ -313,7 +309,7 @@
                 min="0" (input)="updateStockStatus($event)">
             <p>Select Seller</p>
             <mat-form-field appearance="outline">
-                <mat-label>Select Catalogues</mat-label>
+                <mat-label>Select Seller</mat-label>
                 <mat-select formControlName="sellerId">
                     @for (user of users();track user.sellerId) {
                     <mat-option [value]="user.sellerId">
@@ -358,13 +354,14 @@
         <form [formGroup]='edit' class="form-container" (ngSubmit)="updateCatalogue()">
             <p>Product Image</p>
             <input type="text" name="input-name" placeholder="Enter Image URL" formControlName="thumbnail">
+            <p><img src={{edit.value.thumbnail}} alt="" style=" width:8vw; height:8vw; border-radius: 5px;"></p>
             <p>Product Name</p>
             <input type="text" name="input-name" placeholder="Enter Product Name" formControlName="name">
             <p>Select Category</p>
             <mat-form-field appearance="outline">
                 <mat-label>Select Category</mat-label>
                 <mat-select formControlName="catalogueCategory" [compareWith]="compareCatalogue">
-                    @for (catalogue of catalogueCategories(); track catalogue.categoryId) {
+                    @for (catalogue of catalogueCategories(); track catalogue.catalogueCategoryId) {
                     <mat-option [value]="{catalogueId:catalogue.catalogueId,categoryId:catalogue.categoryId}">
                         {{catalogue.categoryName}}
                     </mat-option>
@@ -376,7 +373,7 @@
                 min="0" (input)="updateStockStatus($event)">
             <p>Select Seller</p>
             <mat-form-field appearance="outline">
-                <mat-label>Select Catalogues</mat-label>
+                <mat-label>Select Seller</mat-label>
                 <mat-select formControlName="sellerId">
                     @for (user of users();track user.sellerId) {
                     <mat-option [value]="user.sellerId">

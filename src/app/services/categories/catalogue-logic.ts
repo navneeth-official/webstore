@@ -30,46 +30,48 @@ export class CatalogueLogic {
   catalogue_category: WritableSignal<catalogue_category[]> = signal([])
 
   loadCatalogues() {
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      this.catalogues.set(data.map((d:any)=>({...d,open:signal(false)})))
-      this.loadCatalogueCategory()
+    this.apis.getAllCatalogues().subscribe({
+      next: (data: any) => {
+        this.catalogues.set(data.map((d: any) => ({ ...d, open: signal(false) })))
+        this.loadCatalogueCategory()
+      }, error: (error) => { console.log('Error loading catalogues', error) }
     })
   }
 
   createCatalogue(name: string, description: string) {
     if (name != null && description != null) {
-      this.apis.createCatalogues(name, description).subscribe((data: any) => {
+      this.apis.createCatalogues(name, description).subscribe({next:(data: any) => {
         console.log(data),
           this.loadCatalogues()
-      })
+      },error:(error)=>{console.log('Error creating catalogue',error)}})
     }
   }
 
   updateCatalogue(id: number, name: string, description: string) {
     if (id != null && name != null && description != null) {
-      this.apis.updateCatalogues(id ?? 0, name ?? '', description ?? '').subscribe((data: any) => [
+      this.apis.updateCatalogues(id ?? 0, name ?? '', description ?? '').subscribe({next:(data: any) => {
         console.log(data),
         this.loadCatalogues()
-      ])
+    },error:(error) => {console.log('Error updating catalogue',error)}})
     }
   }
 
   deleteCatalogue(id: number) {
     if (id != null) {
-      this.apis.deleteCatalogue(id).subscribe((data: any) => {
+      this.apis.deleteCatalogue(id).subscribe({next:(data: any) => {
         console.log(data)
         this.loadCatalogues()
-      })
+      },error:(error)=>{console.log('Error deleting catalogue')}})
     }
   }
 
   loadCatalogueCategory() {
-    this.apis3.getAllCatalogueCategory().subscribe((data: any) => {
+    this.apis3.getAllCatalogueCategory().subscribe({next:(data: any) => {
       console.log(data)
       for (let cc of data) {
         var categories: string[] = []
         for (let cc1 of data) {
-          if (cc.catalogueId == cc1.catalogueId && cc.categoryId != cc1.categoryId) {
+          if (cc.catalogueId == cc1.catalogueId) {
             categories = [...categories, cc1.categoryName]
           }
         }
@@ -83,8 +85,7 @@ export class CatalogueLogic {
           this.catalogue_category().push({ catalogueId: cc.catalogueId, categoryIds: categories })
         }
       }
-      console.log("catalogue-category-mappings:" + this.catalogue_category)
-    })
+    },error:(error)=>{console.log('Error loading catalogueCategory:',error)}})
   }
 
 }

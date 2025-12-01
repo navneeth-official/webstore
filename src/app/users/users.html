@@ -96,10 +96,18 @@
                     <li>{{card.name}}</li>
                     <li>{{card.email}}</li>
                     @if(card.status==='ACTIVE'){
-                        <li><div style="background-color: green; color: white; border-radius: 12px; border: 0px; width:3.5vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">{{card.status}}</div></li>
+                    <li>
+                        <div
+                            style="background-color: green; color: white; border-radius: 12px; border: 0px; width:3.5vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">
+                            {{card.status}}</div>
+                    </li>
                     }
                     @else(){
-                        <li><div style="background-color: rgb(179, 0, 0); color: white; border-radius: 12px; border: 0px; width:4.2vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">{{card.status}}</div></li>
+                    <li>
+                        <div
+                            style="background-color: rgb(179, 0, 0); color: white; border-radius: 12px; border: 0px; width:4.2vw; height:1.4vh; padding: 1.2vh; margin-top:-2vh">
+                            {{card.status}}</div>
+                    </li>
                     }
                     <li>{{card.joiningDate}}</li>
                     <li><svg #trigger2

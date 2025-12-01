@@ -41,81 +41,87 @@ export class CategoriesLogic {
   categories: WritableSignal<category[]> = signal([])
   catalogues: WritableSignal<db_catalogues[]> = signal([])
   normalized_catalogues: WritableSignal<catalogue_interface[]> = signal([])
-  search_controller:WritableSignal<string>=signal('')
-  search_categories:WritableSignal<category[]>=signal([])
+  search_controller: WritableSignal<string> = signal('')
+  search_categories: WritableSignal<category[]> = signal([])
 
   OnInit() {
 
-    this.apis.getAllCatalogues().subscribe((data: any) => {
-      console.log(data)
-      this.catalogues.set([...data])
-      this.normalized_catalogues.set(this.catalogues().map(c => ({
-        catalogueId: c.catalogueId,
-        catalogueName: c.catalogueName,
-        catalogueDescription: c.catalogueDescription
-      })))
+    this.apis.getAllCatalogues().subscribe({
+      next: (data: any) => {
+        console.log(data)
+        this.catalogues.set([...data])
+        this.normalized_catalogues.set(this.catalogues().map(c => ({
+          catalogueId: c.catalogueId,
+          catalogueName: c.catalogueName,
+          catalogueDescription: c.catalogueDescription
+        })))
+      }, error: (error) => { console.log('Error loading All Catalogues:', error) }
     })
 
     this.loadCatalogues()
   }
 
   loadCatalogues() {
-    this.apis2.getAllCategories().subscribe((data: any) => {
-      this.categories.set([...data])
-      this.categories.set(data.map((c: any) => ({
-        ...c,
-        open: signal(false)
-      })));
+    this.apis2.getAllCategories().subscribe({
+      next: (data: any) => {
+        this.categories.set([...data])
+        this.categories.set(data.map((c: any) => ({
+          ...c,
+          open: signal(false)
+        })));
+      }, error: (error) => { console.log('Error loading All Categories:', error) }
     })
   }
 
   createCatalogue(name: string, description: string, catalogue: any) {
     if (name != null && description != null) {
-      this.apis2.createCategory(name, description).subscribe((data: any) => {
-        console.log(data),
-          this.apis2.getAllCategories().subscribe((data: any) => {
-            this.categories.set([...data])
-            for (let category of this.categories()) {
-              if (category.categoryName?.trim().toLowerCase() === name?.trim().toLowerCase()) {
-                for (let c of catalogue) {
-                  this.apis3.createCatalogueCategory(c.catalogueId, category.categoryId).subscribe((data: any) => {
-                    console.log(data)
-                    this.loadCatalogues()
-                  })
+      this.apis2.createCategory(name, description).subscribe({
+        next: (data: any) => {
+          console.log(data),
+            this.apis2.getAllCategories().subscribe({next:(data: any) => {
+              this.categories.set([...data])
+              for (let category of this.categories()) {
+                if (category.categoryName?.trim().toLowerCase() === name?.trim().toLowerCase()) {
+                  for (let c of catalogue) {
+                    this.apis3.createCatalogueCategory(c.catalogueId, category.categoryId).subscribe({next:(data: any) => {
+                      console.log(data)
+                      this.loadCatalogues()
+                    },error:(error)=>{console.log('Error creating catalogueCategory:',error)}})
+                  }
                 }
               }
-            }
-            this.loadCatalogues()
-          })
-        console.log(this.loadCatalogues)
+              this.loadCatalogues()
+            },error:(error)=>{console.log('Error loading All Categories:',error)}})
+          console.log(this.loadCatalogues)
+        }, error: (error) => { console.log('Error creating category:', error) }
       })
     }
   }
 
   updateCatalogue(id: number, name: string, description: string) {
     if (id != null && name != null && description != null) {
-      this.apis2.updateCategory(id, name, description).subscribe((data: any) => [
+      this.apis2.updateCategory(id, name, description).subscribe({next:(data: any) => {
         console.log(data),
         this.loadCatalogues()
-      ])
+    },error:(error)=>{console.log('Error updating category:',error)}})
     }
   }
 
   deleteCatalogue(id: number) {
     if (id != null) {
-      this.apis2.deleteCategory(id).subscribe((data: any) => {
+      this.apis2.deleteCategory(id).subscribe({next:(data: any) => {
         console.log(data)
         this.loadCatalogues()
-      })
+      },error:(error)=>{console.log('Error deleting category:',error)}})
     }
   }
 
-  updateSearch(text:string) {
+  updateSearch(text: string) {
     this.search_controller.set(text)
-    this.apis2.searchCategory(this.search_controller()).subscribe((data: any) => {
+    this.apis2.searchCategory(this.search_controller()).subscribe({next:(data: any) => {
       console.log(data)
       this.search_categories.set([...data])
-    })
+    },error:(error)=>{console.log('Error searching category term:',error)}})
   }
 }
 

@@ -75,45 +75,44 @@ export class ProductLogic {
 
   OnInit() {
 
-    this.apis3.getAllCatalogueCategory().subscribe((data: any) => {
+    this.apis3.getAllCatalogueCategory().subscribe({next:(data: any) => {
       console.log(data)
       this.catalogueCategories.set([...data])
-    })
+    },error:(error)=>{console.log('Error loading catalogueCategory:',error)}})
 
-    this.apis4.getAllUsers().subscribe((data: any) => {
+    this.apis4.getAllUsers().subscribe({next:(data: any) => {
       console.log(data)
       this.users.set([...data])
-    })
+    },error:(error)=>{console.log('Error loading All Users:',error)}})
 
     this.loadProducts()
   }
 
   loadProducts() {
-    this.apis5.getAllProducts().subscribe((data: any) => {
-      // console.log(data)
+    this.apis5.getAllProducts().subscribe({next:(data: any) => {
       this.products.set([...data])
       console.log(this.products())
-    })
+    },error:(error)=>{console.log('Error loading All Products:',error)}})
   }
 
   createProduct(thumbnail: string, name: string, catalogueCategory: catalogueCategory, stock: number, price: price_struct, sellerId: number) {
     if (thumbnail != null && name != null && catalogueCategory != null && stock != null && price != null && sellerId != null) {
       const catalogueCategorynNormalized = { catalogueId: catalogueCategory.catalogueId, categoryId: catalogueCategory.categoryId }
-      this.apis5.createProduct(thumbnail, name, catalogueCategorynNormalized, stock, sellerId).subscribe((data: any) => {
+      this.apis5.createProduct(thumbnail, name, catalogueCategorynNormalized, stock, sellerId).subscribe({next:(data: any) => {
         console.log(data),
-          this.apis5.getAllProducts().subscribe((data: any) => {
+          this.apis5.getAllProducts().subscribe({next:(data: any) => {
             console.log(data)
             this.products.set([...data])
             for (let product of this.products()) {
               if (product.productName == name) {
-                this.apis6.createProductPrice(product.productId, 1, price.amount).subscribe((data: any) => {
+                this.apis6.createProductPrice(product.productId, 1, price.amount).subscribe({next:(data: any) => {
                   console.log(data)
                   this.loadProducts()
-                })
+                },error:(error)=>{console.log('Error creating productPrice:',error)}})
               }
             }
-          })
-      })
+          },error:(error)=>{console.log('Error loading All Products:',error)}})
+      },error:(error) => {console.log('Error creating Product:',error)}})
     }
   }
 
@@ -121,38 +120,37 @@ export class ProductLogic {
     if (thumbnail != null && name != null && catalogueCategory != null && stock != null && price != null && sellerId != null) {
       const catalogueCategorynNormalized = { catalogueId: catalogueCategory.catalogueId, categoryId: catalogueCategory.categoryId }
       console.log(catalogueCategorynNormalized)
-      let productPriceId = 0
       console.log(id, thumbnail, name, catalogueCategory, stock, sellerId, 'here')
-      this.apis5.updateProduct(id, thumbnail, name, catalogueCategorynNormalized, stock, sellerId).subscribe((data: any) => [
+      this.apis5.updateProduct(id, thumbnail, name, catalogueCategorynNormalized, stock, sellerId).subscribe({next:(data: any) => {
         console.log(data),
-        this.apis6.getAllProducts().subscribe((data: any) => {
+        this.apis6.getAllProducts().subscribe({next:(data: any) => {
           for (let productPrice of data) {
             if (productPrice.productId == id) {
-              this.apis6.updateProductprice(productPrice.productPriceId, price.amount).subscribe((data: any) => {
+              this.apis6.updateProductprice(productPrice.productPriceId, price.amount).subscribe({next:(data: any) => {
                 console.log(data)
                 this.loadProducts()
-              })
+              },error:(error)=>{console.log('Error updating productPrice:',error)}})
             }
           }
-        }),
-      ])
+        },error:(error)=>{console.log('Error loading All Products:',error)}})
+    },error:(error)=>{console.log('Error updating Product:',error)}})
     }
   }
 
   deleteCatalogue(id: number) {
     if (id != null) {
-      this.apis5.deleteProduct(id).subscribe((data: any) => {
+      this.apis5.deleteProduct(id).subscribe({next:(data: any) => {
         console.log(data)
         this.loadProducts()
-      })
+      },error:(error)=>{console.log('Error deleting catalogue:',error)}})
     }
   }
 
   updateSearch(text: string) {
     this.search_controller.set(text)
-    this.apis2.searchCategory(this.search_controller()).subscribe((data: any) => {
+    this.apis2.searchCategory(this.search_controller()).subscribe({next:(data: any) => {
       console.log(data)
       this.search_products.set([...data])
-    })
+    },error:(error)=>{console.log('Error seraching category term:',error)}})
   }
 }
